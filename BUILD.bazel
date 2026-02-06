@@ -1,0 +1,8 @@
+load("@bazel_gazelle//:def.bzl", "gazelle", "gazelle_binary")
+
+gazelle_binary(
+    name = "gazelle_multilang",
+    languages = [
+        "@rules_python_gazelle_plugin//python",
+    ],
+)
