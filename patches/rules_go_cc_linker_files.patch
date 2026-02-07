@@ -1,0 +1,44 @@
+diff --git a/go/private/actions/link.bzl b/go/private/actions/link.bzl
+index 7d8ff5f..2a9a5bd 100644
+--- a/go/private/actions/link.bzl
++++ b/go/private/actions/link.bzl
+@@ -183,6 +183,7 @@ def emit_link(
+         archive.libs,
+         archive.cgo_deps,
+         go.cc_toolchain_files,
++        go.cc_linker_files,
+         go.sdk.tools,
+         go.stdlib.libs,
+     ]
+diff --git a/go/private/context.bzl b/go/private/context.bzl
+index eb9491c..6d8ddb1 100644
+--- a/go/private/context.bzl
++++ b/go/private/context.bzl
+@@ -588,9 +588,11 @@ def go_context(
+     if cgo_context_info:
+         env.update(cgo_context_info.env)
+         cc_toolchain_files = cgo_context_info.cc_toolchain_files
++        cc_linker_files = cgo_context_info.cc_linker_files
+         cgo_tools = cgo_context_info.cgo_tools
+     else:
+         cc_toolchain_files = depset()
++        cc_linker_files = depset()
+         cgo_tools = None
+ 
+     if importpath == None:
+@@ -637,6 +639,7 @@ def go_context(
+         stdlib = stdlib,
+         actions = ctx.actions,
+         cc_toolchain_files = cc_toolchain_files,
++        cc_linker_files = cc_linker_files,
+         importpath = importpath,
+         importmap = importmap,
+         importpath_aliases = importpath_aliases,
+@@ -927,6 +930,7 @@ def cgo_context_data_impl(ctx):
+ 
+     return CgoContextInfo(
+         cc_toolchain_files = cc_toolchain.all_files,
++        cc_linker_files = cc_toolchain.linker_files if hasattr(cc_toolchain, "linker_files") else depset(),
+         env = env,
+         cgo_tools = struct(
+             cc_toolchain = cc_toolchain,

@@ -3,5 +3,11 @@ module(name = "llvm_toolchain_repro")
 bazel_dep(name = "gazelle", version = "0.47.0", repo_name = "bazel_gazelle")
 bazel_dep(name = "rules_python_gazelle_plugin", version = "1.8.3")
 bazel_dep(name = "toolchains_llvm_bootstrapped", version = "0.4.1")
+bazel_dep(name = "rules_go", version = "0.59.0")
+single_version_override(
+    module_name = "rules_go",
+    patch_strip = 1,
+    patches = ["//patches:rules_go_cc_linker_files.patch"],
+)
 
 register_toolchains("@toolchains_llvm_bootstrapped//toolchain:all")
